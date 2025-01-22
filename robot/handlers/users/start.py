@@ -9,7 +9,7 @@ from aiogram import types
 from aiogram.dispatcher.filters.builtin import CommandStart
 
 from loader import dp
-from robot.keyboards.inline import oznakomlen_kb, prosmotreno_kb, tarrifs_n_withdraw
+from robot.keyboards.inline import oznakomlen_kb, prosmotreno_kb, tarrifs_n_withdraw, oformit_individual
 from robot.utils import send_video
 
 from aiogram.dispatcher import FSMContext
@@ -209,3 +209,4 @@ async def sixth_prosmotreno(callback: types.CallbackQuery, state: FSMContext):
 тариф и просматривать 50 видео в день, нажмите "Тарифы".""",
         reply_markup=await tarrifs_n_withdraw()
     )
+    
