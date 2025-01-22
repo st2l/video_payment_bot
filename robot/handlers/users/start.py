@@ -1,14 +1,15 @@
 import logging
+from random import randint
 
 from asgiref.sync import sync_to_async
-from robot.models import TelegramUser
+from robot.models import TelegramUser, Video
 import asyncio
 
 from aiogram import types
 from aiogram.dispatcher.filters.builtin import CommandStart
 
 from loader import dp
-from robot.keyboards.inline import oznakomlen_kb
+from robot.keyboards.inline import oznakomlen_kb, prosmotreno_kb
 
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters.state import StatesGroup, State
@@ -34,6 +35,9 @@ async def bot_start(message: types.Message, state: FSMContext):
 
 @dp.callback_query_handler(lambda call: call.data == 'oznakomlen')
 async def oznacomlen(callback: types.CallbackQuery, state: FSMContext):
+    telegram_user, _ = await TelegramUser.objects.aget_or_create(chat_id=callback.from_user.id)
+    user = await sync_to_async(telegram_user.get_user)()
+
     await callback.message.edit_text('Загрузка...\n[\t\t\t\t\t\t] 0%')
     await asyncio.sleep(0.5)
     await callback.message.edit_text('Загрузка...\n[====\t\t\t\t\t] 10%')
@@ -54,5 +58,21 @@ async def oznacomlen(callback: types.CallbackQuery, state: FSMContext):
 
     await asyncio.sleep(6)
     await msg.delete()
-    
-    
+
+    # -- -- -- -- -- -- -- -- -- --
+    # sending a first video
+
+    all_videos = await sync_to_async(Video.objects.all, thread_sensitive=True)()
+    all_vids = []
+    async for vid in all_videos:
+        all_vids.append(vid.video)
+        print(str(vid.video))
+    video = all_vids[randint(0, len(all_videos) - 1)]
+
+    await callback.message.answer_video(
+        caption=f"""📱 Тариф просмотра: 0.5$
+✅ Выполнено: 0 из 5
+💰 Ваш баланс: {telegram_user.balance} $""",
+        video=open(str(video), 'rb'),
+        reply_markup=await prosmotreno_kb()
+    )
