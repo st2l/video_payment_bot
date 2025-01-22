@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth import get_user_model
+from datetime import datetime
 
 
 class TelegramUser(models.Model):
@@ -16,6 +17,9 @@ class TelegramUser(models.Model):
     balance = models.FloatField(
         default=0
     )
+    watched_videos = models.IntegerField(default=0)
+    can_watch = models.IntegerField(default=0)
+    last_time_wathed = models.FloatField(default=datetime.now().timestamp())
 
     def __str__(self) -> str:
         return self.chat_id

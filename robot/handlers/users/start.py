@@ -1,5 +1,6 @@
 import logging
 from random import randint
+from datetime import datetime
 
 from asgiref.sync import sync_to_async
 from robot.models import TelegramUser, Video
@@ -18,7 +19,7 @@ from aiogram.dispatcher.filters.state import StatesGroup, State
 
 @dp.message_handler(CommandStart())
 async def bot_start(message: types.Message, state: FSMContext):
-    telegram_user, _ = await TelegramUser.objects.aget_or_create(chat_id=message.from_user.id)
+    telegram_user, _ = await TelegramUser.objects.aget_or_create(chat_id=message.from_user.id, can_watch=5)
     user = await sync_to_async(telegram_user.get_user, thread_sensitive=True)()
 
     text = f"""
@@ -199,6 +200,8 @@ async def sixth_prosmotreno(callback: types.CallbackQuery, state: FSMContext):
     user = await sync_to_async(telegram_user.get_user, thread_sensitive=True)()
 
     telegram_user.balance = telegram_user.balance + 0.5
+    telegram_user.can_watch = 0
+    telegram_user.last_time_wathed = datetime.now().timestamp()
     await sync_to_async(telegram_user.save, thread_sensitive=True)()
     
     await callback.answer()
