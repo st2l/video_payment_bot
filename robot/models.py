@@ -13,6 +13,9 @@ class TelegramUser(models.Model):
     chat_id = models.CharField(
         max_length=20
     )
+    balance = models.IntegerField(
+        default=0
+    )
 
     def __str__(self) -> str:
         return self.chat_id
@@ -23,3 +26,11 @@ class TelegramUser(models.Model):
     def set_user(self, user):
         self.user = user
         self.save()
+
+class Video(models.Model):
+    title = models.CharField(max_length=255)
+    video = models.FileField(upload_to='videos/')
+    
+    def __str__(self) -> str:
+        return self.title
+    
