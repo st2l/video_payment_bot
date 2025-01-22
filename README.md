@@ -1,21 +1,11 @@
 # Django + Aiogram
 
-## 1. Using the template
-
-- Create new repository using this template
-
-![Use this template](./use-template.png)
-
-- And clone your repository
-
-```sh
-git clone https://github.com/<username>/<repo_name>.git
-```
+## 1. GO
 
 - Go project path
 
 ```sh
-cd <repo_name>
+cd <folder name>
 ```
 
 ## 2. Create virtualenv and activate
@@ -45,6 +35,11 @@ cp .env.template .env
 python manage.py migrate
 ```
 
+- superuser
+```sh
+python manage.py createsuperuser
+```
+
 - Run server
 
 ```sh
@@ -56,3 +51,7 @@ python manage.py runserver
 ```sh
 python manage.py runbot
 ```
+
+> Django admin will be on http://<your server ip>:8000/admin
+> creds are what you did in createsuperuser
+
